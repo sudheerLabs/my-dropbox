@@ -50,34 +50,66 @@ class LoginPage extends Component{
 	render(){
 		
 		const { username, password, submitted } = this.state;
+        console.log(this.props.alert.message);
+        const alert = this.props.alert;
 
 		return(
-			<div className="col-md-6 col-md-offset-3">
-	            <h2>Login</h2>
-	            <form name="form" onSubmit={this.handleSubmit}>
-	                <div className='form-group'>
-	                    <label >Username</label>
-	                    <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
-	                </div>
-	                <div className='form-group'>
-	                    <label>Password</label>
-	                    <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
-	                </div>
-	                <div className="form-group">
-	                    <button className="btn btn-primary">Login</button>
-	                    <Link to="/signup" className="btn btn-link">Sign Up</Link>
-	                </div>
-	            </form>
-	        </div>
-		);
+            <div>
+            <span className="dropbox-2015 dropbox-logo-2015">
+            <header className="mast-head">
+            <div className="mast-head__container container">
+                <nav className="mast-head__nav mast-head-nav">
+                <ul className="nav-list">
+                <li className="nav-list__item nav-list__item--dfb">
+                <a href="/business" id="try-dfb" className="button-tertiary try-dfb">Try Dropbox Business</a>
+                </li>
+                </ul>
+                <ul className="nav-list"></ul>
+                </nav>
+                <h1 id="dropbox-logo" className="dropbox-logo">
+                <a href="/" className="dropbox-logo__link">
+                <img src="https://cfl.dropboxstatic.com/static/images/logo_catalog/dropbox_logo_glyph_2015_m1-vfleInWIl.svg" alt="" className="dropbox-logo__glyph" />
+                <img src="https://cfl.dropboxstatic.com/static/images/logo_catalog/dropbox_logo_text_2015_m1-vflV-vZRB.svg" alt="" className="dropbox-logo__type" />Dropbox</a>
+                </h1>
+            </div>
+            </header>
+            </span>
+            <div id="login-or-register-page-content">
+    			<div className="col-md-4 col-md-offset-2">
+                <img data-js-component-id="component3815808038535169898" src="https://cfl.dropboxstatic.com/static/images/empty_states/rebrand_m1/sign-in-illo-vfl_t3XMB.png" data-hi-res="https://cfl.dropboxstatic.com/static/images/empty_states/rebrand_m1/sign-in-illo@2x-vflh_wJFN.png" alt="" className="login-or-register-img" />
+    	         </div>
+                 <div className="col-md-3 login-register-container">
+                    {alert.message &&
+                            <div className={`alert ${alert.type}`}>{alert.message}</div>
+                        }
+
+                    <div className="login-register-header">Sign in</div>
+                    <div className="login-register-switch">or <a href="/signup" className="login-register-switch-link">create an account</a></div>
+    	            <form name="form" onSubmit={this.handleSubmit}>
+    	                <div className='form-group'>
+    	                    <input type="email" placeholder="Email" className="text-input autofocus" name="username" value={username} onChange={this.handleChange} />
+    	                </div>
+    	                <div className='form-group'>
+    	                    <input type="password" placeholder="Password" className="form-control" name="password" value={password} onChange={this.handleChange} />
+    	                </div>
+    	                <div className="form-group">
+    	                    <button type="submit" className="login-button button-primary" tabIndex="-1">
+                            <div className="sign-in-text">Sign in</div>
+                            </button>
+    	                </div>
+    	            </form>
+    	        </div>
+            </div>
+            </div>		);
 	}
 }
 
 function mapStateToProps(state) {
 	console.log(JSON.stringify(state));
     const { loggingIn } = state.authentication;
+    const  alert  = state.alert;
     return {
-        loggingIn
+        loggingIn, alert
     };
 }
 

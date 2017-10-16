@@ -3,8 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 
 import { Router, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { history } from './helpers';
 import { LoginPage, SignupPage, Dashboard } from './components';
+import { alertActions } from './actions';
 
 class App extends Component {
 
@@ -12,8 +14,14 @@ class App extends Component {
     super(props);
 
     const { dispatch } = this.props;
+     history.listen((location, action) => {
+            // clear alert on location change
+            dispatch(alertActions.clear());
+            console.log("in app constructor clearing history")
+        });
   }
   render() {
+    const { alert } = this.props;
     return (
       <div className="App">
         <Router history={history}>
@@ -29,9 +37,20 @@ class App extends Component {
   }
 }
 
+
+function mapStateToProps(state) {
+    const { alert } = state;
+    return {
+        alert
+    };
+}
+
+/*
 function mapStateToProps(state){
   const {username, password} = state;
 }
+*/
 
+const connectedApp = connect(mapStateToProps)(App);
+export { connectedApp as App }; 
 
-export default App;

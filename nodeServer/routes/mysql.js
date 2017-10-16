@@ -12,6 +12,15 @@ function getConnection(){
 	return connection;
 }
 
+var pool      =    mysql.createPool({
+    connectionLimit : 100, //important
+     host     : 'localhost',
+    user     : 'tester',
+    password : 'zaq@123',
+    database : 'test',
+    debug    :  false
+});
+
 
 function fetchData(callback,sqlQuery){
 	
