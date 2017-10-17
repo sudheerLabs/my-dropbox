@@ -190,7 +190,7 @@ function requireLogin(req, res, next) {
 
 router.get('/getFiles', function (req, res, next) {
 
-    var getfiles="select * from user_files where author= '" + g_user + "' and deleted = false ";
+    var getfiles="select * from user_files where author= '" + g_user + "'";
     
      mysql.fetchData(function(err,results){
         if(err){
