@@ -82,8 +82,8 @@ class StarFileDisplay extends Component {
                                           <DropdownItem divider />
                                           <DropdownItem style={{'background':'#FFF'}}>Comment</DropdownItem>
                                           <DropdownItem divider />
-                                          <DropdownItem style={{'background':'#FFF'}}>Delete</DropdownItem>
-                                          <DropdownItem divider />
+                                          <DropdownItem style={{'background':'#FFF'}}>
+                                          <button className="unstyled-button" onClick={() => { this.props.deleteFile(file.fileId); }}>Delete</button></DropdownItem>
                                           <DropdownItem style={{'background':'#FFF'}}>Version History</DropdownItem>
                                         </DropdownMenu>
                                 </ButtonDropdown>     
@@ -109,7 +109,8 @@ class StarFileDisplay extends Component {
 function mapDispatchToProps(dispatch) {
   console.log("Iam in maptoDispatch");
    return {
-       toggleStar : (fileId) => dispatch(fileActions.toggleStar(fileId))
+       toggleStar : (fileId) => dispatch(fileActions.toggleStar(fileId)),
+       deleteFile : (fileId) => dispatch(fileActions.deleteFile(fileId))
     };
 }
 

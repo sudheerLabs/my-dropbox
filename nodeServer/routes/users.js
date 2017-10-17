@@ -130,7 +130,7 @@ router.post('/doFileUpload', upload.single('files'), function (req, res, next) {
     
     fs.move('./public/storage/temp/' + reqFileName , destPath);
 
-    var storagepath = "'http://localhost:3001/storage/"+g_user+ "/"+reqFileName+"'";
+    var storagepath = "'/storage/"+g_user+ "/"+reqFileName+"'";
 
     
     var fetchFile = "select * from user_files where "
