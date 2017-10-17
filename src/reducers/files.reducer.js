@@ -5,6 +5,10 @@ import { userConstants } from '../constants';
 const initialState = {};
 
 export function files(state = initialState, action) {
+
+  console.log(action);
+  console.log("in file reducer");
+  console.log(state);
   switch (action.type) {
     case userConstants.FILEUPLOAD_SUCCESS:
       return state;
@@ -23,7 +27,27 @@ export function files(state = initialState, action) {
     case userConstants.GETALLFILES_FAILURE:
       return { 
         error: action.error
-      };    
+      };
+
+    case userConstants.TOGGLE_STAR:
+      return {
+        ...state,
+        fileList: state.fileList.map(file =>
+          file.fileId == action.fileId
+            ? {...file, "starred": file.starred=="Y" ? "N" : "Y"}
+            : file
+        )
+      }; 
+    case userConstants.DELETE_FILE:
+      return {
+        ...state, 
+        fileList: state.fileList.map(file =>
+          file.fileId == action.fileId
+            ? {...file, "deleted": "Y"}
+            : file
+        )
+      };
+
     default:
       return state;
 

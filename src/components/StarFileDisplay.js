@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 //import {addItem} from "../action/index";
@@ -5,9 +6,9 @@ import { Table } from 'reactstrap';
 import { fileActions } from '../actions';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-class FileDisplay extends Component {
+class StarFileDisplay extends Component {
 
-    constructor(props) {
+	 constructor(props) {
         super(props);
 
         this.toggle = this.toggle.bind(this);
@@ -16,7 +17,7 @@ class FileDisplay extends Component {
         };
     }
 
-    toggle() {
+	toggle() {
         this.setState({
         dropdownOpen: !this.state.dropdownOpen
         });
@@ -29,21 +30,18 @@ class FileDisplay extends Component {
         this.props.toggleStar(id);
     };
 
-    render() {
+	render(){
 
-        const {file} = this.props;
-        //console.log(" Props "+ JSON.stringify(this.props));
-        
+		const {file} = this.props;
 
-        return (
-            <div className="row justify-content-md-center">
+		return (
+			<div className="row justify-content-md-center">
                 <Table>
                      <tbody>
           <tr>
-            <td style={{'height':'30px', 'valign':'top', 'width' : '700px'}}><a className="recents-item__heading" role="button" tabindex="0" href= {"http://localhost:3001" + file.filepath} download>{ file.filename }</a> 
-                
-                <svg  width="32" height="32" viewBox="0 0 32 32" className="mc-icon-star" 
-                onClick={() => { this.props.toggleStar(file.fileId); }}>
+            <td style={{'height':'30px'}}><a className="recents-item__heading" role="button" tabindex="0" href= {"http://localhost:3001" + file.filepath} download>{ file.filename }</a> 
+                <button style={{'background': '#FFF'}} > 
+                <svg  width="32" height="32" viewBox="0 0 32 32" className="mc-icon-star" onClick={this.handleClick} id={file.fileId}>
                     <title>Artboard</title>
                     {file.starred === "Y" ? 
                         <path d="M16 20.95l-4.944 2.767 1.104-5.558L8 14.312l5.627-.667L16 8.5l2.373 5.145 5.627.667-4.16 3.847 1.104 5.558z" fill-rule="nonzero" fill="#0070E0"></path> 
@@ -51,13 +49,9 @@ class FileDisplay extends Component {
                         <path d="M20.944 23.717L16 20.949l-4.944 2.768 1.104-5.558L8 14.312l5.627-.667L16 8.5l2.373 5.145 5.627.667-4.16 3.847 1.104 5.558zM17.66 17.45l1.799-1.663-2.433-.289L16 13.275l-1.026 2.224-2.433.289 1.799 1.663-.478 2.403L16 18.657l2.138 1.197-.478-2.403z" fill-rule="nonzero" fill="#0070E0"></path>
                     }
                 </svg>
-                
+                </button>
             </td>
-            <td style={{'height':'30px', 'valign':'top'}}>
-                <div className="recents-item__sharing recents-item__action-button">
-                       <a className="button-secondary recents-item__share-link" href="#share">Share</a>
-                </div>
-            </td><td>
+            <td>
                 
                 <div className="recents-item__actions">
                     <div className="recents-item__actions-inner">  
@@ -84,12 +78,11 @@ class FileDisplay extends Component {
                                             </button>
                                         </DropdownToggle>
                                         <DropdownMenu>                                      
-                                          <DropdownItem style={{'background':'#FFF'}}><a href={"http://localhost:3001" + file.filepath} download> Download </a></DropdownItem>
+                                          <DropdownItem style={{'background':'#FFF'}}><a href= {file.filepath} download> Download </a></DropdownItem>
                                           <DropdownItem divider />
                                           <DropdownItem style={{'background':'#FFF'}}>Comment</DropdownItem>
                                           <DropdownItem divider />
-                                          <DropdownItem style={{'background':'#FFF'}}>
-                                          <button className="unstyled-button" onClick={() => { this.props.deleteFile(file.fileId); }}>Delete</button></DropdownItem>
+                                          <DropdownItem style={{'background':'#FFF'}}>Delete</DropdownItem>
                                           <DropdownItem divider />
                                           <DropdownItem style={{'background':'#FFF'}}>Version History</DropdownItem>
                                         </DropdownMenu>
@@ -108,25 +101,18 @@ class FileDisplay extends Component {
         </tbody>
         </Table>
             </div>
-        );
-    }
+		);
+	}
 }
 
-function mapStateToProps(store) {
-    const {files} = store;
-    console.log(store);
-    const filesArr = files.recentfiles;
-  return {filesArr};
-}
 
 function mapDispatchToProps(dispatch) {
   console.log("Iam in maptoDispatch");
    return {
-       toggleStar : (fileId) => dispatch(fileActions.toggleStar(fileId)),
-       deleteFile : (fileId) => dispatch(fileActions.deleteFile(fileId))
+       toggleStar : (fileId) => dispatch(fileActions.toggleStar(fileId))
     };
 }
 
-const connectedFileDisplay = connect(mapStateToProps, mapDispatchToProps)(FileDisplay); 
+const connectedStarFileDisplay = connect(null, mapDispatchToProps)(StarFileDisplay); 
 
-export  {connectedFileDisplay as FileDisplay};
+export  {connectedStarFileDisplay as StarFileDisplay};

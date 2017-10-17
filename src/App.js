@@ -5,7 +5,7 @@ import './App.css';
 import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { history } from './helpers';
-import { LoginPage, SignupPage, Dashboard } from './components';
+import { LoginPage, SignupPage, Dashboard, MyHomePage, ShowDeletedPage } from './components';
 import { alertActions } from './actions';
 
 class App extends Component {
@@ -16,7 +16,7 @@ class App extends Component {
     const { dispatch } = this.props;
      history.listen((location, action) => {
             // clear alert on location change
-            dispatch(alertActions.clear());
+            //dispatch(alertActions.clear());
             console.log("in app constructor clearing history")
         });
   }
@@ -30,6 +30,8 @@ class App extends Component {
               <Route exact path="/login" component={LoginPage} />
               <Route exact path="/signup" component={SignupPage} />
               <Route exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/home" component={ MyHomePage} />
+              <Route exact path="/showDeleted" component={ ShowDeletedPage } />
           </div>
         </Router>              
       </div>       

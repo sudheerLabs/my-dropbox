@@ -1,11 +1,15 @@
   import { userConstants } from '../constants';
 
-let user = JSON.parse(localStorage.getItem('user'));
-//const initialState = user ? { loggedIn: true, user } : {};
-const initialState = {};
+
+const initialState =  {};
+console.log("in authentication reducer");
+console.log(initialState);
+
 
 export function authentication(state = initialState, action) {
   console.log(action);
+  console.log("in authentication reducer");
+  console.log(state);
   switch (action.type) {
     case userConstants.LOGIN_REQUEST:
       return {

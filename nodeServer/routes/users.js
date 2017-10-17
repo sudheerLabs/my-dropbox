@@ -130,7 +130,7 @@ router.post('/doFileUpload', upload.single('files'), function (req, res, next) {
     
     fs.move('./public/storage/temp/' + reqFileName , destPath);
 
-    var storagepath = "'./storage/"+g_user+ "/"+reqFileName+"'";
+    var storagepath = "'http://localhost:3001/storage/"+g_user+ "/"+reqFileName+"'";
 
     
     var fetchFile = "select * from user_files where "
@@ -147,7 +147,7 @@ router.post('/doFileUpload', upload.single('files'), function (req, res, next) {
             }
             else {
                 var makeEntry= "Insert into user_files (author, filename, deleted, starred, filepath, rcre_time) values ('"+
-                g_user +"', '"+ reqFileName +"', false, false, "+ storagepath +", NOW())";
+                g_user +"', '"+ reqFileName +"', 'N', 'N', "+ storagepath +", NOW())";
             
                 mysql.fetchData(function(err,results){
                     if(err){
@@ -209,6 +209,68 @@ router.get('/getFiles', function (req, res, next) {
         }  
     },getfiles);
     
+});
+
+
+router.post('/toggleStar', function (req, res, next) {
+
+    var reqFileId = parseInt(req.body.fileId);
+    console.log(req.body.fileId);
+    
+    var updateFile="UPDATE user_files "
+    updateFile= updateFile + "SET starred = (CASE starred WHEN 'N' THEN 'Y' ELSE 'N' END) "
+    updateFile= updateFile + "WHERE fileId = "+ reqFileId;
+    console.log("Query is:"+updateFile);
+
+    mysql.fetchData(function(err,results){
+        console.log(results);
+        if(err){
+            throw err;
+        }
+        else 
+        {
+            if(err){
+                console.log("Op failed");
+                res.status(401).json({message: "Not starred"});
+            
+            }
+            else {
+                console.log("update success");
+                res.status(201).json({message: "Update Successful"});
+            }
+        }  
+    },updateFile); 
+});
+
+
+router.post('/deleteFile', function (req, res, next) {
+
+    var reqFileId = parseInt(req.body.fileId);
+    console.log(req.body.fileId);
+    
+    var updateFile="UPDATE user_files "
+    updateFile= updateFile + "SET deleted = 'Y'"
+    updateFile= updateFile + "WHERE fileId = "+ reqFileId;
+    console.log("Query is:"+updateFile);
+
+    mysql.fetchData(function(err,results){
+        console.log(results);
+        if(err){
+            throw err;
+        }
+        else 
+        {
+            if(err){
+                console.log("Op failed");
+                res.status(401).json({message: "Not deleted"});
+            
+            }
+            else {
+                console.log("update success");
+                res.status(201).json({message: "Delete Successful"});
+            }
+        }  
+    },updateFile); 
 });
 
 module.exports = router;

@@ -1,6 +1,7 @@
 import { userConstants } from '../constants';
 import { history } from '../helpers';
 import { alertActions } from './';  
+import { fileActions } from './'; 
 
 const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:3001';
 
@@ -210,9 +211,9 @@ export function uploadSingleFile(data) {
         body: payload 
     })
     .then(response =>  {
-        if (response.status === 201) { 
-                dispatch(fileUploadSuccess(data));
-                history.push('/Dashboard');
+        if (response.status === 201) {
+          dispatch(fileActions.getAllFiles());
+          history.push('/Dashboard');
         }
     })
     }
