@@ -1,8 +1,10 @@
-import { userConstants } from '../constants';
+ import { userConstants } from '../constants';
 
 //let user = JSON.parse(localStorage.getItem('user'));
+
 //const initialState = user ? { loggedIn: true, user } : {};
-const initialState = {};
+//const initialState = {folderList : ["asdf"]};
+const initialState = {pwd : ",root,"};
 
 export function files(state = initialState, action) {
 
@@ -22,7 +24,9 @@ export function files(state = initialState, action) {
       };
     case userConstants.GETALLFILES_SUCCESS:
       return {
-        fileList: action.fileList
+        ...state,
+        fileList: action.payload.fileList,
+        pwd: action.payload.dir
       };
     case userConstants.GETALLFILES_FAILURE:
       return { 
@@ -46,6 +50,11 @@ export function files(state = initialState, action) {
             ? {...file, "deleted": "Y"}
             : file
         )
+      };
+    case userConstants.CREATE_FOLDER:
+      return {
+        ...state,
+        fileList : [...state.fileList, action.folder]
       };
 
     default:

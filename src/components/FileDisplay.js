@@ -29,18 +29,49 @@ class FileDisplay extends Component {
         this.props.toggleStar(id);
     };
 
+    popsharewindow= (event) => {
+        console.log("sharing file");
+        console.log("event --> "+event.target.id);
+        this.refs.shareFolder.style="display: inline-block, 'position': 'fixed', 'width':'250px', 'height': '150px','border':'5px solid blue', 'margin-left':'-155px', 'margin-top':'-110px', 'top': '50%', 'left':'50%', 'padding':'30px'";
+        this.refs.filename.value = event.target.id;
+    }
+
+    handleShare = (event) => {
+
+      console.log(this.props);  
+      console.log(" shared");
+      //this.refs.newFolderField.type='hidden';
+      const userlist = this.refs.sharefield.value;
+      const filename = this.refs.filename.value;
+
+
+      console.log("###### emailIds are : " + userlist);
+      console.log("###### emailIds are : " + userlist.length);
+      console.log("###### Filename are : " + filename);
+
+      if(userlist.length > 0) {
+          //API call
+          this.refs.sharefield.value = '';
+          this.refs.filename.value = '';
+          this.refs.shareFolder.style="display: none";
+          this.props.shareFile(filename, userlist, this.props.file.path );
+          
+      }
+    }
+
     render() {
 
         const {file} = this.props;
         //console.log(" Props "+ JSON.stringify(this.props));
         
-
         return (
             <div className="row justify-content-md-center">
                 <Table>
                      <tbody>
           <tr>
-            <td style={{'height':'30px', 'valign':'top', 'width' : '700px'}}><a className="recents-item__heading" role="button" tabindex="0" href= {"http://localhost:3001" + file.filepath} download>{ file.filename }</a> 
+            <td style={{'height':'30px', 'valign':'top', 'width' : '700px'}}>
+            <button className="unstyled-button" onClick={() => { this.props.downloadFile(file.path , file.filename); }}>{ file.filename }</button>
+   
                 
                 <svg  width="32" height="32" viewBox="0 0 32 32" className="mc-icon-star" 
                 onClick={() => { this.props.toggleStar(file.fileId); }}>
@@ -55,7 +86,8 @@ class FileDisplay extends Component {
             </td>
             <td style={{'height':'30px', 'valign':'top'}}>
                 <div className="recents-item__sharing recents-item__action-button">
-                       <a className="button-secondary recents-item__share-link" href="#share">Share</a>
+                <button className="button-secondary recents-item__share-link" id={file.filename} onClick={this.popsharewindow}>Share</button>
+                       
                 </div>
             </td><td>
                 
@@ -84,7 +116,7 @@ class FileDisplay extends Component {
                                             </button>
                                         </DropdownToggle>
                                         <DropdownMenu>                                      
-                                          <DropdownItem style={{'background':'#FFF'}}><a href={"http://localhost:3001" + file.filepath} download> Download </a></DropdownItem>
+                                          <DropdownItem style={{'background':'#FFF'}}><a href={"http://localhost:8080" + file.path.replace(/,/g, '/') + file.filename} download> Download </a></DropdownItem>
                                           <DropdownItem divider />
                                           <DropdownItem style={{'background':'#FFF'}}>Comment</DropdownItem>
                                           <DropdownItem divider />
@@ -93,10 +125,7 @@ class FileDisplay extends Component {
                                           <DropdownItem divider />
                                           <DropdownItem style={{'background':'#FFF'}}>Version History</DropdownItem>
                                         </DropdownMenu>
-                                </ButtonDropdown>     
-
-
-                                        
+                                </ButtonDropdown>                                          
                                     </div>
                                 </div>
                             </div>
@@ -107,6 +136,14 @@ class FileDisplay extends Component {
           </tr>
         </tbody>
         </Table>
+
+                <div className="popup" id="shareFolder" style={{'display': 'none'}} ref="shareFolder">
+                    <input type="text" style={{'display': 'none'}} ref="filename"/>
+                    <input type="text"  ref="sharefield"/>
+                    <br />
+                    <input class="button-primary" id="sharewindowclose" type="Button" value="Share" onClick={this.handleShare}/>
+
+                </div>
             </div>
         );
     }
@@ -123,7 +160,9 @@ function mapDispatchToProps(dispatch) {
   console.log("Iam in maptoDispatch");
    return {
        toggleStar : (fileId) => dispatch(fileActions.toggleStar(fileId)),
-       deleteFile : (fileId) => dispatch(fileActions.deleteFile(fileId))
+       deleteFile : (fileId) => dispatch(fileActions.deleteFile(fileId)),
+       shareFile : (fileId, userlist, path) => dispatch(fileActions.shareFile(fileId,userlist,path)),
+       downloadFile: (path,filename) => dispatch(fileActions.downloadFile(path, filename))
     };
 }
 

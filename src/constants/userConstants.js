@@ -17,6 +17,8 @@ export const userConstants = {
 
     TOGGLE_STAR: 'TOGGLE_STAR_SUCCESS',
     DELETE_FILE: 'DELETE_FILE_SUCCESS',
+
+    CREATE_FOLDER: 'CREATE_FOLDER_SUCCESS',
     
     LOGOUT: 'USERS_LOGOUT'  
 };

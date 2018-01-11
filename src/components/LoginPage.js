@@ -87,7 +87,7 @@ class LoginPage extends Component{
                     <div className="login-register-switch">or <a href="/signup" className="login-register-switch-link">create an account</a></div>
     	            <form name="form" onSubmit={this.handleSubmit}>
     	                <div className='form-group'>
-    	                    <input type="email" placeholder="Email" className="text-input autofocus" name="username" value={username} onChange={this.handleChange} />
+    	                    <input type="email" placeholder="Email" className="form-control" name="username" value={username} onChange={this.handleChange} />
     	                </div>
     	                <div className='form-group'>
     	                    <input type="password" placeholder="Password" className="form-control" name="password" value={password} onChange={this.handleChange} />

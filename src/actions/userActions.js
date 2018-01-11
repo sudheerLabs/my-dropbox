@@ -3,7 +3,8 @@ import { history } from '../helpers';
 import { alertActions } from './';  
 import { fileActions } from './'; 
 
-const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:3001';
+//const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:3001';
+const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8080';
 
 export const userActions = {
   login,
@@ -32,8 +33,9 @@ function loginFailure(payload){
 
 function signupSuccess(payload){
  return {
-   type : userConstants.SIGNUP_SUCCESS,
-   userdata : payload
+   //type : userConstants.SIGNUP_SUCCESS,
+   type : userConstants.LOGIN_SUCCESS,
+   user : payload
  }
 }
 
@@ -56,18 +58,19 @@ function fileUploadSuccess(payload){
 function login(username, password) {
   console.log("login" + username + " " + password + JSON.stringify({username, password}));
   return dispatch => {
-    return fetch(`${api}/users/doLogin`, {
+    return fetch(`http://localhost:8080/user/login`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
-      body: JSON.stringify({username, password})
+      body: JSON.stringify({username, password}),
+      credentials : 'include' 
     })
     .then(response => {
-      if(response.status !== 201){
+      if(response.status !== 200){
         return Promise.reject("Invalid username or password");
       }
-      return response.json();
+      return "success";
     },
     error => {
       return Promise.reject("No Response from Server");
@@ -84,50 +87,32 @@ function login(username, password) {
   }
 }
 
-/*
-
-function login(username, password) {
-  console.log("login" + username + " " + password + JSON.stringify({username, password}));
-  return dispatch => {
-    return fetch(`${api}/users/doLogin`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({username, password})
-    })
-    .then(response => {
-      if(response.status === 201){
-        console.log(response.data + "response" + typeof response);
-        dispatch(loginSuccess(response.json()));
-        history.push('/dashboard');
-      }
-      else{
-        dispatch(loginFailure(response.json()));
-        dispatch(alertActions.error("Incorrect Username or password")); 
-      }
-    })
-  }
-}
-*/
-
 function signup(userDetails){
   return dispatch =>{
-    return fetch(`${api}/users/doSignup`, {
+    return fetch(`${api}/user/signup`, {
       method: 'POST',
       headers:{
          'Content-Type': 'application/json'
       },
-      body: JSON.stringify(userDetails)
+      body: JSON.stringify(userDetails),
+      credentials:'include' 
     })
     .then(response => {
-      if(response.status !== 201){
-        return Promise.reject("Signup failed");
+      console.log(response.status);
+      if(response.status === 201){
+        dispatch(signupSuccess(userDetails));
+        dispatch(alertActions.success("Sign up successful. You can login now."));
+        history.push('/dashboard');
+        //return response.json();
       }
-      return response.json();
+      //return Promise.reject("Signup failed");
+      dispatch(signupFailure("error"));
+      dispatch(alertActions.error("Sign up failed"));
     },
     error => {
-      return Promise.reject("No Response from Server");
+      //return Promise.reject("No Response from Server");
+      dispatch(signupFailure(error));
+      dispatch(alertActions.error("Sign up failed"));
     })
     .then(
       user =>{
@@ -168,31 +153,29 @@ function signup(userDetails){
 
 function signout(username) {
   return dispatch => {
-    return fetch(`${api}/users/doLogout`, {
+    return fetch(`${api}/user/logout`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
-      body: JSON.stringify({username})
+      body: JSON.stringify({username}),
+      credentials:'include' 
     })
     .then(response => {
-      if(response.status !== 201){
-        return Promise.reject("Signout failed");
+      if(response.status !== 200){
+        //return Promise.reject("Signout failed");
+        dispatch(failure("Error occurred"));
+        dispatch(alertActions.error("Error occurred"));
       }
-      return response.json();
+      console.log("logging out - move to home");
+      dispatch(success("Logged Out Successfully"));
+      history.push('/login'); 
     },
     error => {
-      return Promise.reject("No Response from Server");
+      //return Promise.reject("No Response from Server");
+      dispatch(failure("No Response from server"));
+      dispatch(alertActions.error("No Response from server"));
     })
-    .then(
-      message => {
-        dispatch(success(message));
-        history.push('/login');       
-      },
-      error =>{
-        dispatch(failure(error));
-        dispatch(alertActions.error(error));
-      })
   };
 
   function success(user) { return { type: userConstants.LOGOUT, user } }
@@ -200,19 +183,23 @@ function signout(username) {
 }
 
 
-export function uploadSingleFile(data) {
+export function uploadSingleFile(data, path) {
   console.log("uploading....");
   console.log(data);
+  console.log(path);
   const payload = new FormData();
   payload.append('files', data.fHandle);
+  payload.append('path', path);
   return dispatch => {
-    return fetch(`${api}/users/doFileUpload`, {
+    return fetch(`${api}/user/uploadFile`, {
         method: 'POST',
-        body: payload 
+        body: payload,
+        credentials:'include'  
     })
     .then(response =>  {
+        console.log(response.status);
         if (response.status === 201) {
-          dispatch(fileActions.getAllFiles());
+          dispatch(fileActions.getAllFiles(path));
           history.push('/Dashboard');
         }
     })

@@ -39,7 +39,8 @@ class StarFileDisplay extends Component {
                 <Table>
                      <tbody>
           <tr>
-            <td style={{'height':'30px'}}><a className="recents-item__heading" role="button" tabindex="0" href= {"http://localhost:3001" + file.filepath} download>{ file.filename }</a> 
+            <td style={{'height':'30px'}}>
+            <button className="unstyled-button" onClick={() => { this.props.downloadFile(file.path , file.filename); }}>{ file.filename }</button>
                 <button style={{'background': '#FFF'}} > 
                 <svg  width="32" height="32" viewBox="0 0 32 32" className="mc-icon-star" onClick={this.handleClick} id={file.fileId}>
                     <title>Artboard</title>
@@ -78,7 +79,7 @@ class StarFileDisplay extends Component {
                                             </button>
                                         </DropdownToggle>
                                         <DropdownMenu>                                      
-                                          <DropdownItem style={{'background':'#FFF'}}><a href= {file.filepath} download> Download </a></DropdownItem>
+                                          <DropdownItem style={{'background':'#FFF'}}><a href= {file.path.replace(/,/g, '/')} download> Download </a></DropdownItem>
                                           <DropdownItem divider />
                                           <DropdownItem style={{'background':'#FFF'}}>Comment</DropdownItem>
                                           <DropdownItem divider />
@@ -110,7 +111,8 @@ function mapDispatchToProps(dispatch) {
   console.log("Iam in maptoDispatch");
    return {
        toggleStar : (fileId) => dispatch(fileActions.toggleStar(fileId)),
-       deleteFile : (fileId) => dispatch(fileActions.deleteFile(fileId))
+       deleteFile : (fileId) => dispatch(fileActions.deleteFile(fileId)),
+       downloadFile: (path,filename) => dispatch(fileActions.downloadFile(path, filename))
     };
 }
 

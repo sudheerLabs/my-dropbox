@@ -12,12 +12,14 @@ class FileUploadPage extends Component {
 
 	handleChange = event => {
 		console.log("handle change");
+		console.log(this.props);
 		this.setState({fName:event.target.files[0].name});
 		this.setState({fHandle: event.target.files[0]});
-		this.props.uploadSingleFile({fName:event.target.files[0].name, fHandle: event.target.files[0]})
+		this.props.uploadSingleFile({fName:event.target.files[0].name, fHandle: event.target.files[0]}, this.props.pwd);
 	}
 	render(){
 		const {fdata} = this.props;
+		console.log(this.props);
 		return(
 			<div className="row justify-content-md-center">
 			    
@@ -33,9 +35,10 @@ class FileUploadPage extends Component {
 			);
 	}
 }
+
 function mapDispatchToProps(dispatch) {
 	return {
-			uploadSingleFile : (fileDetails) => dispatch(uploadSingleFile(fileDetails))
+			uploadSingleFile : (fileDetails, path) => dispatch(uploadSingleFile(fileDetails, path))
 	};
 }
 
